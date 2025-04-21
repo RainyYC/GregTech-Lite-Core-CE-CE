@@ -12,6 +12,8 @@
     "architecturecraft.MixinTileSawbench",
     "gregtech.MixinMetaTileEntityFluidHatch",
     "gregtech.MixinMetaTileEntityItemBus",
+    "gregtech.MixinRecipeLogicInfoProvider",
+    "multiblocks.mixinGCYMMultiblockRecipeLogic",
     "theoneprobe.MixinHarvestInfoTools",
     "threng.MixinPacketInventoryAction",
     "topaddons.MixinAddonArchitectureCraft"
@@ -24,8 +26,8 @@
     "gregtech.MixinMetaPrefixItem",
     "gregtech.MixinMetaValueItem",
     "threng.MixinContainerTile",
-    "threng.MixinInventoryRequest",
-    "threng.MixinGuiLevelMaintainer"
+    "threng.MixinGuiLevelMaintainer",
+    "threng.MixinInventoryRequest"
   ],
   "injectors": {
     "defaultRequire": 1

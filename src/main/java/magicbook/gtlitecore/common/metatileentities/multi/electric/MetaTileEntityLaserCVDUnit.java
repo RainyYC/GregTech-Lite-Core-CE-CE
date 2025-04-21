@@ -1,6 +1,5 @@
 package magicbook.gtlitecore.common.metatileentities.multi.electric;
 
-import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -9,8 +8,10 @@ import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMap;
+import gregtech.api.util.GTUtility;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.OverMaxRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.unification.GTLiteMaterials;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
@@ -99,10 +100,11 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.1"));
         tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.2"));
+        tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.3"));
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
-    private class LICVDRecipeLogic extends MultiblockRecipeLogic {
+    private class LICVDRecipeLogic extends OverMaxRecipeLogic {
 
         public LICVDRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
@@ -125,6 +127,11 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
             } else {
                 this.maxProgressTime = maxProgress / 2;
             }
+        }
+
+        @Override
+        public int getParallelLimit() {
+            return 4 * (int)(Math.pow(GTUtility.getTierByVoltage(getMaxVoltage()), 1.5));
         }
     }
 }
