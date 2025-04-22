@@ -13,7 +13,7 @@ import gregtech.api.util.TextFormattingUtil;
 import gregtech.common.metatileentities.multi.MetaTileEntityLargeBoiler;
 import gregtech.integration.theoneprobe.provider.CapabilityInfoProvider;
 import gregtech.integration.theoneprobe.provider.RecipeLogicInfoProvider;
-import magicbook.gtlitecore.api.capability.impl.OverMaxRecipeLogic;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.TextStyleClass;
@@ -76,7 +76,7 @@ public abstract class MixinRecipeLogicInfoProvider extends CapabilityInfoProvide
     }
 
     private static long getEUt(AbstractRecipeLogic logic) {
-        if(logic instanceof OverMaxRecipeLogic) return ((OverMaxRecipeLogic) logic).getLInfoProviderEUt();
+        if(logic instanceof AdvancedRecipeLogic) return ((AdvancedRecipeLogic) logic).getLInfoProviderEUt();
         return logic.getInfoProviderEUt();
     }
 }

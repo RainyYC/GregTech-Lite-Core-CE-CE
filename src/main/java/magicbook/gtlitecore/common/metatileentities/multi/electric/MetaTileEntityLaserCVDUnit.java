@@ -10,8 +10,9 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.GTUtility;
 import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.MetaBlocks;
-import magicbook.gtlitecore.api.capability.impl.OverMaxRecipeLogic;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.unification.GTLiteMaterials;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
@@ -26,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
@@ -44,7 +43,12 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
         return new MetaTileEntityLaserCVDUnit(metaTileEntityId);
     }
 
-    @Nonnull
+    @Override
+    public boolean canBeDistinct() {
+        return true;
+    }
+
+    @NotNull
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -86,7 +90,7 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
     }
 
     @SideOnly(Side.CLIENT)
-    @Nonnull
+    @NotNull
     @Override
     protected ICubeRenderer getFrontOverlay() {
         return GTLiteTextures.CVD_UNIT_OVERLAY;
@@ -95,16 +99,18 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
     @Override
     public void addInformation(ItemStack stack,
                                @Nullable World player,
-                               @Nonnull List<String> tooltip,
+                               @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(TooltipHelper.RAINBOW + I18n.format("gtlitecore.universal.tooltip.async_recipe"));
         tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.1"));
         tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.2"));
         tooltip.add(I18n.format("gtlitecore.machine.laser_cvd_unit.tooltip.3"));
+
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
-    private class LICVDRecipeLogic extends OverMaxRecipeLogic {
+    private class LICVDRecipeLogic extends AdvancedRecipeLogic {
 
         public LICVDRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
@@ -132,6 +138,11 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
         @Override
         public int getParallelLimit() {
             return 4 * (int)(Math.pow(GTUtility.getTierByVoltage(getMaxVoltage()), 1.5));
+        }
+
+        @Override
+        public boolean isAllowRecipeAsync() {
+            return true;
         }
     }
 }

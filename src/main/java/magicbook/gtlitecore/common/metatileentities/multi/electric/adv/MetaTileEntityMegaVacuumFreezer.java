@@ -16,6 +16,7 @@ import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.common.blocks.BlockStructureCasing;
 import magicbook.gtlitecore.common.blocks.BlockTransparentCasing;
 import magicbook.gtlitecore.common.blocks.GTLiteMetaBlocks;
@@ -110,6 +111,7 @@ public class MetaTileEntityMegaVacuumFreezer extends RecipeMapMultiblockControll
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(TooltipHelper.RAINBOW_SLOW + I18n.format("gregtech.machine.perfect_oc"));
+        tooltip.add(TooltipHelper.RAINBOW + I18n.format("gtlitecore.universal.tooltip.async_recipe"));
         tooltip.add(I18n.format("gtlitecore.machine.mega_vacuum_freezer.tooltip.1"));
         tooltip.add(I18n.format("gtlitecore.universal.tooltip.max_parallel", 1024));
     }
@@ -137,7 +139,7 @@ public class MetaTileEntityMegaVacuumFreezer extends RecipeMapMultiblockControll
         return true;
     }
 
-    protected static class MegaVacuumFreezerRecipeLogic extends MultiblockRecipeLogic {
+    protected static class MegaVacuumFreezerRecipeLogic extends AdvancedRecipeLogic {
 
         private final MetaTileEntityMegaVacuumFreezer vacuumFreezer;
 
@@ -156,5 +158,9 @@ public class MetaTileEntityMegaVacuumFreezer extends RecipeMapMultiblockControll
             this.maxProgressTime = maxProgress / 2;
         }
 
+        @Override
+        public boolean isAllowRecipeAsync() {
+            return true;
+        }
     }
 }
