@@ -214,7 +214,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     public boolean isAllowRecipeAsync() { return false; }
 
-    // fuck distinct
+    // distinct
 
     @Override
     protected void trySearchNewRecipeDistinct() {
