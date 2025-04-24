@@ -1,6 +1,7 @@
 package magicbook.gtlitecore.common.metatileentities.multi.electric.adv;
 
 import gregicality.multiblocks.api.unification.GCYMMaterials;
+import gregtech.api.GTValues;
 import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -113,7 +114,7 @@ public class MetaTileEntityMegaVacuumFreezer extends RecipeMapMultiblockControll
         tooltip.add(TooltipHelper.RAINBOW_SLOW + I18n.format("gregtech.machine.perfect_oc"));
         tooltip.add(TooltipHelper.RAINBOW + I18n.format("gtlitecore.universal.tooltip.async_recipe"));
         tooltip.add(I18n.format("gtlitecore.machine.mega_vacuum_freezer.tooltip.1"));
-        tooltip.add(I18n.format("gtlitecore.universal.tooltip.max_parallel", 1024));
+        tooltip.add(I18n.format("gtlitecore.machine.mega_vacuum_freezer.tooltip.2"));
     }
 
     @SideOnly(Side.CLIENT)
@@ -150,7 +151,9 @@ public class MetaTileEntityMegaVacuumFreezer extends RecipeMapMultiblockControll
 
         @Override
         public int getParallelLimit() {
-            return 1024;
+            int v = getOverMAXV(getInputEUt());
+            v = Math.max(10, v);
+            return (int) (1024 * Math.pow(1.2, v - 10));
         }
 
         @Override

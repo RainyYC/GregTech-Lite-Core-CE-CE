@@ -16,6 +16,7 @@ import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +35,7 @@ public class MetaTileEntityCryogenicReactor extends RecipeMapMultiblockControlle
 
     public MetaTileEntityCryogenicReactor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTLiteRecipeMaps.CRYOGENIC_REACTOR_RECIPES);
-        this.recipeMapWorkable = new MultiblockRecipeLogic(this, true);
+        this.recipeMapWorkable = new AdvancedRecipeLogic(this, true);
     }
 
     @Override

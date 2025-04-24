@@ -16,6 +16,7 @@ import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.client.utils.TooltipHelper;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockGlassCasing;
 import gregtech.common.blocks.MetaBlocks;
@@ -24,6 +25,7 @@ import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
 import magicbook.gtlitecore.api.capability.GTLiteDataCode;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.recipe.properties.AssemblyCasingTierProperty;
 import magicbook.gtlitecore.api.unification.GTLiteMaterials;
@@ -268,6 +270,7 @@ public class MetaTileEntityPreciseAssembler extends MultiMapMultiblockController
                                @Nonnull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(TooltipHelper.RAINBOW + I18n.format("gtlitecore.universal.tooltip.async_recipe"));
         tooltip.add(I18n.format("gtlitecore.machine.precise_assembler.tooltip.1"));
         tooltip.add(I18n.format("gtlitecore.machine.precise_assembler.tooltip.2"));
         tooltip.add(I18n.format("gtlitecore.machine.precise_assembler.tooltip.3"));
@@ -293,7 +296,7 @@ public class MetaTileEntityPreciseAssembler extends MultiMapMultiblockController
         return this.CasingTier;
     }
 
-    protected class PreciseAssemblerRecipeLogic extends MultiblockRecipeLogic {
+    protected class PreciseAssemblerRecipeLogic extends AdvancedRecipeLogic {
         public PreciseAssemblerRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
         }
@@ -341,6 +344,11 @@ public class MetaTileEntityPreciseAssembler extends MultiMapMultiblockController
             } else {
                 return (int) Math.pow(2, CasingTier + 4);
             }
+        }
+
+        @Override
+        public boolean isAllowRecipeAsync() {
+            return true;
         }
     }
 }

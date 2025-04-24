@@ -2,11 +2,11 @@ package magicbook.gtlitecore.api.capability.impl;
 
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.MultiblockRecipeLogic;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.recipes.FluidKey;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
-import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
 import gregtech.api.util.GTTransferUtils;
 import gregtech.api.util.GTUtility;
@@ -21,7 +21,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,16 +35,146 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     // for MAX+ OC
 
+    // not getter no setter
+    public class OCParameter {
+        public double durationMultiplier, eutMultiplier;
+        public int count;
+
+        public OCParameter(double durationMultiplier, double eutMultiplier, int count) {
+            this.durationMultiplier = durationMultiplier;
+            this.eutMultiplier = eutMultiplier;
+            this.count = count;
+        }
+
+        public OCParameter copy() {
+            return new OCParameter(durationMultiplier, eutMultiplier, count);
+        }
+    }
+
+    public class OCResult {
+        public long eut, duration;
+        public int parallel;
+
+        public OCResult(long eut, long duration, int parallel) {
+            this.eut = eut;
+            this.duration = duration;
+            this.parallel = parallel;
+        }
+    }
+
     @Override
-    public boolean isAllowOverclocking() {
+    final public boolean isAllowOverclocking() {
         return false;
     }
 
     public long recipeEUt = 0;
 
     @Override
+    public boolean prepareRecipe(Recipe recipe, IItemHandlerModifiable inputInventory,
+                                 IMultipleTankHandler inputFluidInventory) {
+        recipe = Recipe.trimRecipeOutputs(recipe, getRecipeMap(), metaTileEntity.getItemOutputLimit(),
+                metaTileEntity.getFluidOutputLimit());
+
+        double euDiscount = getEUtDiscount(), speedBonus = getSpeedBonus();
+        // apply EU/speed discount (if any) before parallel
+        if (euDiscount > 0 || speedBonus > 0) { // if-statement to avoid unnecessarily creating RecipeBuilder object
+            RecipeBuilder<?> builder = new RecipeBuilder<>(recipe, getRecipeMap());
+            if (euDiscount > 0) {
+                int newEUt = (int) Math.round(recipe.getEUt() * euDiscount);
+                if (newEUt <= 0) newEUt = 1;
+                builder.EUt(newEUt);
+            }
+            if (speedBonus > 0) {
+                int duration = recipe.getDuration();
+                int newDuration = (int) Math.round(duration * speedBonus);
+                if (newDuration <= 0) newDuration = 1;
+                builder.duration(newDuration);
+            }
+            recipe = builder.build().getResult();
+        }
+
+        // Pass in the trimmed recipe to the parallel logic
+        recipe = find1tocParallelRecipe(
+                recipe,
+                inputInventory,
+                inputFluidInventory,
+                getOutputInventory(),
+                getOutputTank(),
+                getMaxParallelVoltage(),
+                getParallelLimit());
+
+        if (recipe != null && setupAndConsumeRecipeInputs(recipe, inputInventory, inputFluidInventory)) {
+            setupRecipe(recipe);
+            return true;
+        }
+        return false;
+    }
+
+    private Recipe find1tocParallelRecipe(Recipe currentRecipe, IItemHandlerModifiable inputs,
+                                      IMultipleTankHandler fluidInputs,
+                                      IItemHandlerModifiable outputs,
+                                      IMultipleTankHandler fluidOutputs, long maxVoltage, int parallelLimit) {
+        OCResult oc = makeOC(currentRecipe);
+        if ((parallelLimit > 1 || oc.parallel > 1) && getRecipeMap() != null) {
+            RecipeBuilder<?> parallelBuilder = switch (getParallelLogicType()) {
+                case MULTIPLY -> findMultipliedParallelRecipe(getRecipeMap(), currentRecipe, inputs, fluidInputs,
+                        outputs, fluidOutputs, parallelLimit * oc.parallel, maxVoltage, getMetaTileEntity());
+                case APPEND_ITEMS -> findAppendedParallelItemRecipe(getRecipeMap(), inputs, outputs,
+                        parallelLimit * oc.parallel, maxVoltage, getMetaTileEntity());
+            };
+
+            // if the builder returned is null, no recipe was found.
+            if (parallelBuilder == null) {
+                invalidateInputs();
+                return null;
+            } else {
+                // if the builder returned does not parallel, its outputs are full
+                if (parallelBuilder.getParallel() == 0) {
+                    invalidateOutputs();
+                    return null;
+                } else {
+                    setParallelRecipesPerformed(parallelBuilder.getParallel());
+                    // apply any parallel bonus
+                    applyParallelBonus(parallelBuilder);
+                    return parallelBuilder.build().getResult();
+                }
+            }
+        }
+        return currentRecipe;
+    }
+
+    private OCResult makeOC(Recipe recipe) {
+        return makeOC(recipe.getEUt(), recipe.getDuration());
+    }
+
+    private OCResult makeOC(double eut, double duration) {
+        long maxEU = getInputEUt();
+        List<OCParameter> ocParameters = getOCList();
+        double parallel = 1;
+        boolean is1tick = duration <= 1.0D;
+        for(OCParameter parameter : ocParameters) {
+            parameter = parameter.copy();
+            while(parameter.count --> 0) {
+                if(eut * parameter.eutMultiplier > maxEU)
+                    return new OCResult((long) eut, Math.round(duration), (int) Math.round(parallel));
+                eut *= parameter.eutMultiplier;
+                if(is1tick)
+                    parallel = Math.min(Integer.MAX_VALUE, parallel * parameter.durationMultiplier);
+                else {
+                    duration = Math.max(duration / parameter.durationMultiplier, 1.0D);
+                    if(Math.round(duration) == 1) {
+                        duration = 1.0D;
+                        is1tick = true;
+                    }
+                }
+            }
+        }
+        return new OCResult((long) eut, Math.round(duration), (int) Math.round(parallel));
+    }
+
+    @Override
     protected void setupRecipe(Recipe recipe) {
-        LSetupRecipe(recipe, overclockResults[0], overclockResults[1], true);
+        LSetupRecipe(recipe, overclockResults[0], overclockResults[1]);
     }
 
     protected boolean drawEnergy(long recipeEUt, boolean simulate) {
@@ -75,6 +204,10 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     public long getLInfoProviderEUt() {
         return recipeEUt;
+    }
+
+    public List<OCParameter> getOCList() {
+        return Arrays.asList(new OCParameter(getOverclockingDurationDivisor(), getOverclockingVoltageMultiplier(), Integer.MAX_VALUE));
     }
 
     // for Recipe Async
@@ -156,7 +289,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
             super.trySearchNewRecipeCombined();
             return;
         }
-        long maxEUt = Math.max(getEnergyContainer().getInputVoltage(), getEnergyContainer().getOutputVoltage());
+        long maxEUt = getInputEUt();
 
         IItemHandlerModifiable importInventory = getInputInventory();
         IMultipleTankHandler importFluids = getInputTank();
@@ -207,31 +340,56 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     }
 
     private long getEUt(Recipe recipe) {
-        if(recipe.getDuration() <= 64) return recipe.getEUt();
+        setMaxProgress(recipe.getDuration());
+        double duration = maxProgressTime;
+        if(duration <= 64) return recipe.getEUt();
         BigDecimal eut = BigDecimal.valueOf(recipe.getEUt());
         if(getOverclockingDurationDivisor() < getOverclockingVoltageMultiplier()) {
             // not perfect oc => continuum perfect oc
-            eut = eut.multiply(BigDecimal.valueOf(recipe.getDuration() / 64D));
+            eut = eut.multiply(BigDecimal.valueOf(duration / 64D));
         } else {
             // perfect oc => continuum 4/6 oc
             // 82.7188 = 64 / log_{6}4
-            eut = eut.multiply(BigDecimal.valueOf(recipe.getDuration() / 82.7188D));
+            eut = eut.multiply(BigDecimal.valueOf(duration / 82.7188D));
         }
         return eut.min(BigDecimal.valueOf(16L * Integer.MAX_VALUE)).longValue();
     }
 
     private boolean prepareRecipeDistinct(Map<Recipe, IItemHandlerModifiable> recipesTodo, long recipeEUt) {
-        RecipeBuilder<?> builder = getRecipeMap().recipeBuilder();
-        recipesTodo.forEach((recipe, trash) -> builder.append(recipe, 1, false));
-        Recipe recipe = builder.EUt(1).duration(64).build().getResult();
+        if(isAllowRecipeAsync()) {
+            RecipeBuilder<?> builder = getRecipeMap().recipeBuilder();
+            recipesTodo.forEach((recipe, trash) -> builder.append(recipe, 1, false));
+            Recipe recipe = builder.EUt(1).duration(64).build().getResult();
 
-        // plz do not parallel more
+            // plz do not parallel more
 
-        if (distinctSetupAndConsumeRecipeInputs(recipe, recipesTodo, getInputTank(), recipeEUt)) {
-            LSetupRecipe(recipe, recipeEUt, 64, false);
-            return true;
+            if (distinctSetupAndConsumeRecipeInputs(recipe, recipesTodo, getInputTank(), recipeEUt)) {
+                LSetupRecipe(recipe, recipeEUt, 64);
+                return true;
+            }
+        } else {
+            // we assume recipesTodo here is size of one
+            Recipe recipe = recipesTodo.keySet().stream().findAny().get();
+            IItemHandlerModifiable itemInventory = recipesTodo.get(recipe);
+            recipe = Recipe.trimRecipeOutputs(recipe, getRecipeMap(), metaTileEntity.getItemOutputLimit(),
+                    metaTileEntity.getFluidOutputLimit());
+
+            recipe = find1tocParallelRecipe(
+                    recipe,
+                    currentDistinctInputBus,
+                    getInputTank(),
+                    getOutputInventory(),
+                    getOutputTank(),
+                    getMaxParallelVoltage(),
+                    getParallelLimit());
+
+            if (recipe != null && setupAndConsumeRecipeInputs(recipe, itemInventory)) {
+                setupRecipe(recipe);
+                return true;
+            }
+
+            return false;
         }
-
         return false;
     }
 
@@ -239,7 +397,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         // plz do not parallel more
 
         if (combinedSetupAndConsumeRecipeInputs(recipe, recipeEUt)) {
-            LSetupRecipe(recipe, recipeEUt, 64, false);
+            LSetupRecipe(recipe, recipeEUt, 64);
             return true;
         }
 
@@ -296,24 +454,19 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     }
 
 
-    protected void LSetupRecipe(Recipe recipe, long recipeEUt, long duration, boolean isAllowOC) {
+    protected void LSetupRecipe(Recipe recipe, long recipeEUt, long duration) {
         this.progressTime = 1;
 
         this.recipeEUt = recipeEUt;
-        double worktime = duration;
 
-        if(isAllowOC) {
-            long maxEUt = Math.max(getEnergyContainer().getInputVoltage(), getEnergyContainer().getOutputVoltage());
-            while(true) {
-                long nextEUt = (long) (this.recipeEUt * getOverclockingVoltageMultiplier());
-                if (nextEUt > maxEUt) break;
-                this.recipeEUt = nextEUt;
-                worktime /= getOverclockingDurationDivisor();
-                if(worktime < 1) break;
-            }
+        if(!isAllowRecipeAsync()) {
+            OCResult result = makeOC(recipeEUt, (double) duration);
+            setMaxProgress((int) Math.max(1, result.duration));
+            this.recipeEUt = result.eut;
+        } else {
+            this.maxProgressTime = Math.max(1, (int) (double) duration);
         }
 
-        setMaxProgress(Math.max(1, (int) worktime));
 
         int recipeTier = GTUtility.getTierByVoltage(recipe.getEUt());
         int machineTier = getOverclockForTier(getMaximumOverclockVoltage());
@@ -530,5 +683,20 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
             }
         }
         return minMultiplier;
+    }
+
+    public static int getOverMAXV(long eut) {
+        // 8 = ULV(0)
+        long cur = 8;
+        int res = 0;
+        while(cur * 4 <= eut) {
+            cur *= 4;
+            ++res;
+        }
+        return res;
+    }
+
+    public long getInputEUt() {
+        return Math.max(getEnergyContainer().getInputVoltage(), getEnergyContainer().getOutputVoltage());
     }
 }

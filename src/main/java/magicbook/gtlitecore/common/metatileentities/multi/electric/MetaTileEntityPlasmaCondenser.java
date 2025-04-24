@@ -14,6 +14,7 @@ import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockTurbineCasing;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
 import magicbook.gtlitecore.common.blocks.BlockMetalCasing;
@@ -34,7 +35,7 @@ public class MetaTileEntityPlasmaCondenser extends RecipeMapMultiblockController
 
     public MetaTileEntityPlasmaCondenser(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTLiteRecipeMaps.PLASMA_CONDENSER_RECIPES);
-        this.recipeMapWorkable = new MultiblockRecipeLogic(this, true);
+        this.recipeMapWorkable = new AdvancedRecipeLogic(this, true);
     }
 
     @Override

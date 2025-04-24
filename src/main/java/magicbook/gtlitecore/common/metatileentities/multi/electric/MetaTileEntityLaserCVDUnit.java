@@ -137,7 +137,7 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
 
         @Override
         public int getParallelLimit() {
-            return 4 * (int)(Math.pow(GTUtility.getTierByVoltage(getMaxVoltage()), 1.5));
+            return 4 * (int)(Math.pow(getOverMAXV(getInputEUt()), 1.5));
         }
 
         @Override

@@ -12,6 +12,7 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.blocks.BlockGlassCasing;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
 import magicbook.gtlitecore.common.blocks.BlockMultiblockCasing;
@@ -27,6 +28,7 @@ public class MetaTileEntityCVDUnit extends RecipeMapMultiblockController {
 
     public MetaTileEntityCVDUnit(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTLiteRecipeMaps.CVD_UNIT_RECIPES);
+        this.recipeMapWorkable = new CVDRecipeLogic(this);
     }
 
     @Override
@@ -73,5 +75,11 @@ public class MetaTileEntityCVDUnit extends RecipeMapMultiblockController {
     @Override
     protected ICubeRenderer getFrontOverlay() {
         return GTLiteTextures.CVD_UNIT_OVERLAY;
+    }
+
+    private class CVDRecipeLogic extends AdvancedRecipeLogic {
+        public CVDRecipeLogic(RecipeMapMultiblockController tileEntity) {
+            super(tileEntity);
+        }
     }
 }
