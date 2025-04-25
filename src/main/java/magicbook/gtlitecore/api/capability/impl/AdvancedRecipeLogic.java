@@ -113,7 +113,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         return false;
     }
 
-    private Recipe find1tocParallelRecipe(Recipe currentRecipe, IItemHandlerModifiable inputs,
+    protected Recipe find1tocParallelRecipe(Recipe currentRecipe, IItemHandlerModifiable inputs,
                                       IMultipleTankHandler fluidInputs,
                                       IItemHandlerModifiable outputs,
                                       IMultipleTankHandler fluidOutputs, long maxVoltage, int parallelLimit) {
@@ -146,11 +146,11 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         return currentRecipe;
     }
 
-    private OCResult makeOC(Recipe recipe) {
+    protected OCResult makeOC(Recipe recipe) {
         return makeOC(recipe.getEUt(), recipe.getDuration());
     }
 
-    private OCResult makeOC(double eut, double duration) {
+    protected OCResult makeOC(double eut, double duration) {
         long maxEU = getInputEUt();
         List<OCParameter> ocParameters = getOCList();
         double parallel = 1;
@@ -488,7 +488,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     // utils
 
-    private static int getMaxRecipeMultiplier(Recipe recipe, List<ItemStack> inputs, List<FluidStack> fluidInputs) {
+    protected static int getMaxRecipeMultiplier(Recipe recipe, List<ItemStack> inputs, List<FluidStack> fluidInputs) {
         // Find all the items in the combined Item Input inventories and create oversized ItemStacks
         Object2IntMap<ItemStack> ingredientStacks = fromItemHandler(inputs);
 

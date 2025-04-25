@@ -52,6 +52,8 @@ public class GTLiteEventHandler {
                 "",
                 "gtlitecore.universal.login_event.desc.4",
                 "gtlitecore.universal.login_event.desc.5",
+                "gtlitecore.universal.login_event.desc.6",
+                "gtlitecore.universal.login_event.desc.7",
                 "gtlitecore.universal.login_event.split"
         };
 

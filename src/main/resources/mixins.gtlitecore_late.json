@@ -13,7 +13,6 @@
     "gregtech.MixinMetaTileEntityFluidHatch",
     "gregtech.MixinMetaTileEntityItemBus",
     "gregtech.MixinRecipeLogicInfoProvider",
-    "multiblocks.mixinGCYMMultiblockRecipeLogic",
     "theoneprobe.MixinHarvestInfoTools",
     "threng.MixinPacketInventoryAction",
     "topaddons.MixinAddonArchitectureCraft"

@@ -17,6 +17,7 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.util.TextComponentUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedFuelRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.unification.GTLiteMaterials;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
@@ -60,7 +61,7 @@ public class MetaTileEntityDysonSwarm extends FuelMultiblockController {
         this.outputInventory = new ItemHandlerList(this.getAbilities(MultiblockAbility.EXPORT_ITEMS));
         this.outputFluidInventory = new FluidTankList(this.allowSameFluidFillForOutputs(), this.getAbilities(MultiblockAbility.EXPORT_FLUIDS));
         List<IEnergyContainer> energyContainer = new ArrayList<>(this.getAbilities(MultiblockAbility.OUTPUT_LASER));
-        energyContainer.addAll(this.getAbilities(MultiblockAbility.OUTPUT_LASER));
+        energyContainer.addAll(this.getAbilities(MultiblockAbility.OUTPUT_ENERGY));
         this.energyContainer = new EnergyContainerList(energyContainer);
     }
 
@@ -257,7 +258,7 @@ public class MetaTileEntityDysonSwarm extends FuelMultiblockController {
         return false;
     }
 
-    private static class DysonSwarmWorkableHandler extends MultiblockFuelRecipeLogic {
+    private static class DysonSwarmWorkableHandler extends AdvancedFuelRecipeLogic {
 
         private boolean isCoolant = false;
         private final MetaTileEntityDysonSwarm dysonSwarm;
