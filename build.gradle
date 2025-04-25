@@ -237,11 +237,11 @@ tasks.named("processIdeaSettings").configure {
 
 tasks.register('compileAndZip', Zip) {
     dependsOn("reobfJar")
-    from 'build/libs' // 指定Java文件的路径
-    from '/' // 指定资源文件的路径
-    include 'gtlitecore-0.7.6-alpha.jar' // 包括所有的Java文件
-    include '更新一览.md' // 包括所有的资源文件
+    from 'build/libs'
+    from '/'
+    include 'gtlitecore-0.7.6-alpha.jar'
+    include '更新一览.md'
 
     destinationDirectory = file("build")
-    archiveFileName = 'gtlite fork^2.zip' // 指定输出的zip文件名
+    archiveFileName = 'gtlite fork^1.zip'
 }

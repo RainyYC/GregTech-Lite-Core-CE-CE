@@ -27,6 +27,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
@@ -48,7 +50,7 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
         return true;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -90,7 +92,7 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
     }
 
     @SideOnly(Side.CLIENT)
-    @NotNull
+    @Nonnull
     @Override
     protected ICubeRenderer getFrontOverlay() {
         return GTLiteTextures.CVD_UNIT_OVERLAY;
@@ -99,7 +101,7 @@ public class MetaTileEntityLaserCVDUnit extends MultiMapMultiblockController {
     @Override
     public void addInformation(ItemStack stack,
                                @Nullable World player,
-                               @NotNull List<String> tooltip,
+                               @Nonnull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(TooltipHelper.RAINBOW + I18n.format("gtlitecore.universal.tooltip.async_recipe"));

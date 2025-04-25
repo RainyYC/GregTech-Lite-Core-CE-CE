@@ -75,6 +75,8 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         recipe = Recipe.trimRecipeOutputs(recipe, getRecipeMap(), metaTileEntity.getItemOutputLimit(),
                 metaTileEntity.getFluidOutputLimit());
 
+        // as we have no api here, disable this logic
+        /*
         double euDiscount = getEUtDiscount(), speedBonus = getSpeedBonus();
         // apply EU/speed discount (if any) before parallel
         if (euDiscount > 0 || speedBonus > 0) { // if-statement to avoid unnecessarily creating RecipeBuilder object
@@ -92,6 +94,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
             }
             recipe = builder.build().getResult();
         }
+        */
 
         // Pass in the trimmed recipe to the parallel logic
         recipe = find1tocParallelRecipe(
