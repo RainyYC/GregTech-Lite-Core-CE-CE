@@ -18,6 +18,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.recipe.properties.FieldCasingTierProperty;
@@ -49,6 +50,7 @@ public class MetaTileEntityCollider extends RecipeMapMultiblockController {
 
     public MetaTileEntityCollider(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTLiteRecipeMaps.COLLIDER_RECIPES);
+        this.recipeMapWorkable = new AdvancedRecipeLogic(this);
     }
 
     @Override
