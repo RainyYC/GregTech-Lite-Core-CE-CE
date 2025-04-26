@@ -18,6 +18,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.utils.GTLiteUtils;
@@ -268,7 +269,7 @@ public class MetaTileEntitySuprachronalNeutroniumForge extends MultiMapMultibloc
         return shapeInfo;
     }
 
-    private class DTNFRecipeLogic extends MultiblockRecipeLogic {
+    private class DTNFRecipeLogic extends AdvancedRecipeLogic {
 
         public DTNFRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity, true);

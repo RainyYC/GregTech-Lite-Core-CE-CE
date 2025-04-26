@@ -16,6 +16,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.metatileentities.MetaTileEntities;
 import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.recipe.properties.GravitonCasingTierProperty;
@@ -51,7 +52,7 @@ public class MetaTileEntityNicollDysonBeamer extends MultiMapMultiblockControlle
                 GTLiteRecipeMaps.NICOLL_DYSON_BEAMER_BURNING_MODULE,
                 GTLiteRecipeMaps.NICOLL_DYSON_BEAMER_FORGING_MODULE,
                 GTLiteRecipeMaps.NICOLL_DYSON_BEAMER_OSCILLATING_MODULE});
-        this.recipeMapWorkable = new MultiblockRecipeLogic(this, true);
+        this.recipeMapWorkable = new AdvancedRecipeLogic(this, true);
     }
 
     @Override

@@ -35,7 +35,12 @@ public class MetaTileEntityCryogenicReactor extends RecipeMapMultiblockControlle
 
     public MetaTileEntityCryogenicReactor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTLiteRecipeMaps.CRYOGENIC_REACTOR_RECIPES);
-        this.recipeMapWorkable = new AdvancedRecipeLogic(this, true);
+        this.recipeMapWorkable = new AdvancedRecipeLogic(this, true) {
+            @Override
+            public int get1tocLimit() {
+                return 8;
+            }
+        };
     }
 
     @Override
@@ -121,5 +126,6 @@ public class MetaTileEntityCryogenicReactor extends RecipeMapMultiblockControlle
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(TooltipHelper.RAINBOW_SLOW + I18n.format("gregtech.machine.perfect_oc"));
+        tooltip.add(I18n.format("gtlitecore.universal.tooltip.1toc_limit", 8));
     }
 }

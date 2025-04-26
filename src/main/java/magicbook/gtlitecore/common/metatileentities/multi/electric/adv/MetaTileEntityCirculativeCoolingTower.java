@@ -24,6 +24,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.utils.GTLiteUtils;
@@ -289,10 +290,11 @@ public class MetaTileEntityCirculativeCoolingTower extends MultiMapMultiblockCon
         tooltip.add(I18n.format("gtlitecore.machine.circulative_cooling_tower.tooltip.19"));
         tooltip.add(I18n.format("gtlitecore.machine.circulative_cooling_tower.tooltip.20"));
         tooltip.add(I18n.format("gtlitecore.machine.circulative_cooling_tower.tooltip.21"));
+        tooltip.add(I18n.format("gtlitecore.machine.circulative_cooling_tower.tooltip.22"));
         tooltip.add(I18n.format("gtlitecore.universal.tooltip.laser_input"));
     }
 
-    public class CirculativeCoolingTowerRecipeLogic extends MultiblockRecipeLogic {
+    public class CirculativeCoolingTowerRecipeLogic extends AdvancedRecipeLogic {
 
         public CirculativeCoolingTowerRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
@@ -387,9 +389,6 @@ public class MetaTileEntityCirculativeCoolingTower extends MultiMapMultiblockCon
             }
         }
 
-        /**
-         * @param maxProgress In some special mode, get correspondence progress time.
-         */
         @Override
         public void setMaxProgress(int maxProgress) {
             if (isCompressorMode()) {
@@ -421,5 +420,11 @@ public class MetaTileEntityCirculativeCoolingTower extends MultiMapMultiblockCon
             }
         }
 
+        @Override
+        protected double getOverclockingDurationDivisor() {
+            if(isPlasmaCondenserMode() || isCryogenicReactorMode())
+                return 4;
+            return 2;
+        }
     }
 }

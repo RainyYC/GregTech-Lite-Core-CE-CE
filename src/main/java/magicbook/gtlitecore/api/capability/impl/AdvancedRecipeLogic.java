@@ -69,6 +69,18 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     public long recipeEUt = 0;
 
+    public double getDurationMult() {
+        return 1;
+    }
+
+    public double getEutMult() {
+        return 1;
+    }
+
+    public int get1tocLimit() {
+        return Integer.MAX_VALUE;
+    }
+
     @Override
     public boolean prepareRecipe(Recipe recipe, IItemHandlerModifiable inputInventory,
                                  IMultipleTankHandler inputFluidInventory) {
@@ -162,7 +174,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
                     return new OCResult((long) eut, Math.round(duration), (int) Math.round(parallel));
                 eut *= parameter.eutMultiplier;
                 if(is1tick)
-                    parallel = Math.min(Integer.MAX_VALUE, parallel * parameter.durationMultiplier);
+                    parallel = Math.min(get1tocLimit(), parallel * parameter.durationMultiplier);
                 else {
                     duration = Math.max(duration / parameter.durationMultiplier, 1.0D);
                     if(Math.round(duration) == 1) {
@@ -221,11 +233,13 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     @Override
     protected void trySearchNewRecipeDistinct() {
+        double eutMult = getEutMult();
+
         if(!isAllowRecipeAsync()) {
             super.trySearchNewRecipeDistinct();
             return;
         }
-        long maxEUt = Math.max(getEnergyContainer().getInputVoltage(), getEnergyContainer().getOutputVoltage());
+        long maxEUt = getInputEUt();
 
         List<IItemHandlerModifiable> importInventory = getInputBuses();
         IMultipleTankHandler importFluids = getInputTank();
@@ -260,7 +274,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
                 long finalCurrentEUt = currentEUt;
                 Recipe nxt = getRecipeMap().find(fakeItems, fakeFluids, recipe ->
                         0 < getEUt(recipe)
-                            && getEUt(recipe) < maxEUt - finalCurrentEUt
+                            && getEUt(recipe) * eutMult < maxEUt - finalCurrentEUt
                             && checkRecipe(recipe)
                             && recipe.matches(false, fakeItems, fakeFluids));
                 if(nxt == null) break;
@@ -288,6 +302,8 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
 
     @Override
     protected void trySearchNewRecipeCombined() {
+        double eutMult = getEutMult();
+
         if(!isAllowRecipeAsync()) {
             super.trySearchNewRecipeCombined();
             return;
@@ -316,7 +332,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
             long finalCurrentEUt = currentEUt;
             Recipe nxt = getRecipeMap().find(fakeItems, fakeFluids, recipe ->
                     0 < getEUt(recipe)
-                            && getEUt(recipe) < maxEUt - finalCurrentEUt
+                            && getEUt(recipe) * eutMult < maxEUt - finalCurrentEUt
                             && checkRecipe(recipe)
                             && recipe.matches(false, fakeItems, fakeFluids));
             if(nxt == null) break;
@@ -343,10 +359,10 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     }
 
     private long getEUt(Recipe recipe) {
-        setMaxProgress(recipe.getDuration());
+        setMaxProgress((int) (recipe.getDuration() * getDurationMult()));
         double duration = maxProgressTime;
-        if(duration <= 64) return recipe.getEUt();
-        BigDecimal eut = BigDecimal.valueOf(recipe.getEUt());
+        if(duration <= 64) return (long) (recipe.getEUt() * getEutMult());
+        BigDecimal eut = BigDecimal.valueOf(recipe.getEUt() * getEutMult());
         if(getOverclockingDurationDivisor() < getOverclockingVoltageMultiplier()) {
             // not perfect oc => continuum perfect oc
             eut = eut.multiply(BigDecimal.valueOf(duration / 64D));
@@ -463,7 +479,7 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         this.recipeEUt = recipeEUt;
 
         if(!isAllowRecipeAsync()) {
-            OCResult result = makeOC(recipeEUt, (double) duration);
+            OCResult result = makeOC(recipeEUt * getEutMult(), duration * getDurationMult());
             setMaxProgress((int) Math.max(1, result.duration));
             this.recipeEUt = result.eut;
         } else {

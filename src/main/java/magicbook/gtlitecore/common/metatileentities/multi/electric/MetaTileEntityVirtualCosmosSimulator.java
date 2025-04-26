@@ -14,6 +14,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockComputerCasing;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.utils.GTLiteUtils;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
@@ -203,7 +204,7 @@ public class MetaTileEntityVirtualCosmosSimulator extends RecipeMapMultiblockCon
         }
     }
 
-    private class VirtualCosmosSimulatorRecipeLogic extends MultiblockRecipeLogic {
+    private class VirtualCosmosSimulatorRecipeLogic extends AdvancedRecipeLogic {
 
         public final FluidStack HYDROGEN_STACK = Hydrogen.getFluid(1000000);
         public final FluidStack HELIUM_STACK = Helium.getFluid(1000000);

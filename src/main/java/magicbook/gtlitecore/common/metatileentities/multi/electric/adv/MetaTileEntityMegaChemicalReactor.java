@@ -18,6 +18,7 @@ import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -115,7 +116,7 @@ public class MetaTileEntityMegaChemicalReactor extends RecipeMapMultiblockContro
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
-    private class MegaChemicalReactorWorkableHandler extends MultiblockRecipeLogic {
+    private class MegaChemicalReactorWorkableHandler extends AdvancedRecipeLogic {
 
         public MegaChemicalReactorWorkableHandler(RecipeMapMultiblockController tileEntity) {
             super(tileEntity, true);

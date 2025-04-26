@@ -29,6 +29,7 @@ import gregtech.common.blocks.BlockGlassCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiFluidHatch;
 import gregtech.core.sound.GTSoundEvents;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
 import magicbook.gtlitecore.common.blocks.BlockActiveUniqueCasing;
 import magicbook.gtlitecore.common.blocks.BlockCleanroomCasing;
@@ -385,15 +386,12 @@ public class MetaTileEntityAdvancedAssemblyLine extends RecipeMapMultiblockContr
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
-    private class AdvancedAssemblyLineRecipeLogic extends MultiblockRecipeLogic {
+    private class AdvancedAssemblyLineRecipeLogic extends AdvancedRecipeLogic {
 
         public AdvancedAssemblyLineRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
         }
 
-        /**
-         * @param maxProgress Get 0.8 progress time.
-         */
         @Override
         public void setMaxProgress(int maxProgress) {
             this.maxProgressTime = (int) (0.8 * maxProgress);

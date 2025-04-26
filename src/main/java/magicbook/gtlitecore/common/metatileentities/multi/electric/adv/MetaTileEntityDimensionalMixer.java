@@ -26,6 +26,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import magicbook.gtlitecore.api.GTLiteAPI;
 import magicbook.gtlitecore.api.block.impl.WrappedIntTier;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.pattern.GTLiteTraceabilityPredicate;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.utils.GTLiteUtils;
@@ -216,7 +217,7 @@ public class MetaTileEntityDimensionalMixer extends MultiMapMultiblockController
         tooltip.add(I18n.format("gtlitecore.universal.tooltip.laser_input"));
     }
 
-    public class DimensionalMixerRecipeLogic extends MultiblockRecipeLogic {
+    public class DimensionalMixerRecipeLogic extends AdvancedRecipeLogic {
 
         public DimensionalMixerRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
