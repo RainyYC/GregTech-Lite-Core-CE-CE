@@ -56,6 +56,7 @@ public class CommonProxy {
     public void preLoad() {
         GTLiteRecipeMaps.init();
         MinecraftForge.EVENT_BUS.register(new GTLiteEventHandler.PlayerLoginEventHandler());
+        MinecraftForge.EVENT_BUS.register(new GTLiteEventHandler.TickingHandler());
     }
 
     /**

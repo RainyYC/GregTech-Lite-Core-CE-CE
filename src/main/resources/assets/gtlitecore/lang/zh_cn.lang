@@ -4225,3 +4225,8 @@ gtlitecore.universal.login_event.desc.7=§7改版作者QQ：1158677939 / 1072874
 
 gtlitecore.universal.tooltip.async_recipe=一次性执行多个配方。
 gtlitecore.universal.tooltip.1toc_limit=超频至 1t 后，继续超频最多获得 §e%s§7 次并行。
+
+gtlitecore.wirelessenergy.notify.part.1=当前无线网络能量：%s
+gtlitecore.wirelessenergy.notify.part.2=（≈ %s MAX·t）
+gtlitecore.wirelessenergy.notify.part.3=过去五分钟平均变更：%s EU/t
+gtlitecore.wirelessenergy.notify.part.4=（≈ %s MAX）

@@ -1,11 +1,9 @@
 package magicbook.gtlitecore;
 
 import akka.japi.Pair;
-import gregicality.multiblocks.api.recipes.GCYMRecipeMaps;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
 import gregtech.common.ConfigHolder;
@@ -24,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -168,9 +167,9 @@ public class GTLiteCore {
     /* ----------------- Server Started Stage Event ----------------- */
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event) {
-        findConflicts(RecipeMaps.LARGE_CHEMICAL_RECIPES, "conflicts/chemical_reactor.txt");
-        findConflicts(RecipeMaps.MIXER_RECIPES, "conflicts/mixer.txt");
-        findConflicts(GCYMRecipeMaps.ALLOY_BLAST_RECIPES, "conflicts/alloy_blast.txt");
+//        findConflicts(RecipeMaps.LARGE_CHEMICAL_RECIPES, "conflicts/chemical_reactor.txt");
+//        findConflicts(RecipeMaps.MIXER_RECIPES, "conflicts/mixer.txt");
+//        findConflicts(GCYMRecipeMaps.ALLOY_BLAST_RECIPES, "conflicts/alloy_blast.txt");
 //        findConflicts(RecipeMaps.ASSEMBLER_RECIPES, "conflicts/assembler.txt"); // too hard
     }
 
