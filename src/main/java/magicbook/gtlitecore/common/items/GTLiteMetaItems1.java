@@ -796,7 +796,11 @@ public class GTLiteMetaItems1 extends StandardMetaItem {
         PIEZOELECTRIC_CRYSTAL = this.addItem(342, "piezoelectric_crystal");
 
         //  ID 343: Consumed Item of Dyson Swarm
-        DYSON_SWARM_MODULE = this.addItem(343, "dyson_swarm_module");
+        DYSON_SWARM_MODULE = this.addItem(343, "dyson_swarm_module")
+                .addComponents(new TooltipBehavior((lines) -> {
+                    lines.add(I18n.format("metaitem.dyson_swarm_module.tooltip.1"));
+                    lines.add(I18n.format("metaitem.dyson_swarm_module.tooltip.2"));
+        }));
 
         //  ID 344: Upgrade Materials of Nicoll-Dyson Beamer (also as some Basic Components of Material)
         HYPERSTABLE_SELF_HEALING_ADHESIVE = this.addItem(344, "hyperstable_self_healing_adhesive");
@@ -847,6 +851,13 @@ public class GTLiteMetaItems1 extends StandardMetaItem {
                     lines.add(I18n.format("metaitem.cosmic_fabric_plasma_containment_cell.tooltip.3"));
                     lines.add(I18n.format("metaitem.cosmic_fabric_plasma_containment_cell.tooltip.4"));
                 }));
+
+        ETERNAL_DYSON_SWARM_MODULE = this.addItem(364, "eternal_dyson_swarm_module")
+                .addComponents(new TooltipBehavior((lines) -> {
+                    lines.add(I18n.format("metaitem.eternal_dyson_swarm_module.tooltip.1"));
+                    lines.add(I18n.format("metaitem.eternal_dyson_swarm_module.tooltip.2"));
+        }));
+
 
         /* -------------------------------------------------------------------- Memory Cards  --------------------------------------------------------------------- */
 

@@ -302,6 +302,7 @@ public final class GTLiteMetaItems {
     public static MetaItem<?>.MetaValueItem ULTRASONIC_HOMOGENIZER;
     public static MetaItem<?>.MetaValueItem PIEZOELECTRIC_CRYSTAL;
     public static MetaItem<?>.MetaValueItem DYSON_SWARM_MODULE;
+    public static MetaItem<?>.MetaValueItem ETERNAL_DYSON_SWARM_MODULE;
     public static MetaItem<?>.MetaValueItem HYPERSTABLE_SELF_HEALING_ADHESIVE;
     public static MetaItem<?>.MetaValueItem SUPERSOLID_SPACETIME_CONTINUUM;
     public static MetaItem<?>.MetaValueItem ASTRAL_ARRAY;

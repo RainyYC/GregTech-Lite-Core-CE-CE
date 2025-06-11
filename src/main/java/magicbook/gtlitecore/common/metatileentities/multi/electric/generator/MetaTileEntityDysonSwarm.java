@@ -118,10 +118,6 @@ public class MetaTileEntityDysonSwarm extends FuelMultiblockController {
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.10"));
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.11"));
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.12"));
-        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.13"));
-        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.14"));
-        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.15"));
-        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.16"));
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.uses_per_hour_coolant", 3600000));
         tooltip.add(I18n.format("gtlitecore.universal.tooltip.laser_output"));
     }

@@ -2,10 +2,10 @@ package magicbook.gtlitecore.loaders.multiblock;
 
 import gregtech.api.metatileentity.multiblock.CleanroomType;
 import gregtech.api.unification.material.MarkerMaterials;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import static gregtech.api.GTValues.L;
-import static gregtech.api.GTValues.UHV;
-import static gregtech.api.GTValues.VA;
+import static gregtech.api.GTValues.*;
 import static gregtech.api.recipes.RecipeMaps.ASSEMBLER_RECIPES;
 import static gregtech.api.unification.ore.OrePrefix.circuit;
 import static gregtech.api.unification.ore.OrePrefix.plate;
@@ -14,13 +14,14 @@ import static gregtech.api.unification.ore.OrePrefix.wireFine;
 import static gregtech.common.items.MetaItems.CARBON_MESH;
 import static gregtech.common.items.MetaItems.POWER_THRUSTER_ADVANCED;
 import static magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps.DYSON_SWARM_RECIPES;
-import static magicbook.gtlitecore.api.unification.GTLiteMaterials.ActiniumGroupHAlloy;
-import static magicbook.gtlitecore.api.unification.GTLiteMaterials.CarbonNanotube;
-import static magicbook.gtlitecore.api.unification.GTLiteMaterials.HY1301;
-import static magicbook.gtlitecore.api.unification.GTLiteMaterials.Polyetheretherketone;
+import static magicbook.gtlitecore.api.unification.GTLiteMaterials.*;
+import static magicbook.gtlitecore.api.unification.materials.info.GTLiteOrePrefix.swarm;
 import static magicbook.gtlitecore.common.items.GTLiteMetaItems.DYSON_SWARM_MODULE;
+import static magicbook.gtlitecore.common.items.GTLiteMetaItems.ETERNAL_DYSON_SWARM_MODULE;
 
 public class DysonSwarm {
+
+    private static final Log log = LogFactory.getLog(DysonSwarm.class);
 
     public static void init() {
 
@@ -39,72 +40,29 @@ public class DysonSwarm {
                 .cleanroom(CleanroomType.CLEANROOM)
                 .buildAndRegister();
 
-        //  x1
+        // Unbreakable Swarm Module
+
+        ASSEMBLER_RECIPES.recipeBuilder()
+                .input(plate, Periodicium, 16)
+                .input(circuit, MarkerMaterials.Tier.OpV, 4)
+                .input(swarm, Eternity, 32)
+                .input(DYSON_SWARM_MODULE, 16)
+                .output(ETERNAL_DYSON_SWARM_MODULE)
+                .EUt(VA[UXV])
+                .duration(42 * 20)
+                .buildAndRegister();
+
         DYSON_SWARM_RECIPES.recipeBuilder()
-                .circuitMeta(1)
                 .input(DYSON_SWARM_MODULE)
                 .chancedOutput(DYSON_SWARM_MODULE, 5000, 0)
                 .EUt(10000000)
                 .duration(200)
                 .buildAndRegister();
 
-        //  x4
         DYSON_SWARM_RECIPES.recipeBuilder()
-                .circuitMeta(2)
-                .input(DYSON_SWARM_MODULE, 4)
-                .chancedOutput(DYSON_SWARM_MODULE, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 5000, 0)
-                .EUt(40000000)
-                .duration(200)
-                .buildAndRegister();
-
-        //  x16
-        DYSON_SWARM_RECIPES.recipeBuilder()
-                .circuitMeta(3)
-                .input(DYSON_SWARM_MODULE, 16)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 2, 5000, 0)
-                .EUt(160000000)
-                .duration(200)
-                .buildAndRegister();
-
-        //  x32
-        DYSON_SWARM_RECIPES.recipeBuilder()
-                .circuitMeta(4)
-                .input(DYSON_SWARM_MODULE, 32)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 4, 5000, 0)
-                .EUt(320000000)
-                .duration(200)
-                .buildAndRegister();
-
-        //  x64
-        DYSON_SWARM_RECIPES.recipeBuilder()
-                .circuitMeta(5)
-                .input(DYSON_SWARM_MODULE, 64)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .chancedOutput(DYSON_SWARM_MODULE, 8, 5000, 0)
-                .EUt(640000000)
+                .input(ETERNAL_DYSON_SWARM_MODULE)
+                .output(ETERNAL_DYSON_SWARM_MODULE)
+                .EUt(100000000)
                 .duration(200)
                 .buildAndRegister();
     }
