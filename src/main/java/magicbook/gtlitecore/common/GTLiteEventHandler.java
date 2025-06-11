@@ -91,6 +91,7 @@ public class GTLiteEventHandler {
 
         @SubscribeEvent
         public void onTicking(TickEvent.PlayerTickEvent event) {
+            if (!GTLiteConfigHolder.misc.notifyWirelessEnergy) return;
             if (event.phase == TickEvent.Phase.END) {
                 int tick = ticks.getOrDefault(event.player.getUniqueID(), 0) + 1;
                 if(tick >= TICK_INTERVAL) {

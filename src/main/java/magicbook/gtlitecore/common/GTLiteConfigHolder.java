@@ -373,6 +373,9 @@ public class GTLiteConfigHolder {
         @Comment({"Allow Creative items (e.g. Creative Quantum Tank) be makable in Survival mode.", "Default: true"})
         public boolean enableCreativeRecipe = true;
 
+        @Comment({"定时通知无线电网状态。", "Default: true"})
+        public boolean notifyWirelessEnergy = true;
+
         public MiscOptions() {}
     }
 
