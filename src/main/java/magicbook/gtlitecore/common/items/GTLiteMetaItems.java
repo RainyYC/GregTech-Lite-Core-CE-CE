@@ -620,6 +620,12 @@ public final class GTLiteMetaItems {
     //  Debug Items
     public static MetaItem<?>.MetaValueItem STRUCTURE_WRITER;
 
+    // fork items
+    public static MetaItem<?>.MetaValueItem NEPATA_CATARIA;
+    public static MetaItem<?>.MetaValueItem UNKNOWN_CAT;
+    public static MetaItem<?>.MetaValueItem STRESS_CAT;
+    public static MetaItem<?>.MetaValueItem GOOD_CAT;
+
     private GTLiteMetaItems() {}
 
     public static void init() {

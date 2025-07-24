@@ -45,6 +45,7 @@ public class RecipeManager {
         BrineChain.init();
         BPAPolycarbonateChain.init();
         BZMediumChain.init();
+        CatChain.init();
         CBDOPolycarbonateChain.init();
         ChlorineChain.init();
         CosmicFabricChain.init();

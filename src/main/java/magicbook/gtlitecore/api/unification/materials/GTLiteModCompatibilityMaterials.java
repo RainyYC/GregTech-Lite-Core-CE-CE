@@ -1,6 +1,7 @@
 package magicbook.gtlitecore.api.unification.materials;
 
 import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.info.MaterialFlags;
 import gregtech.api.unification.material.properties.BlastProperty;
 import magicbook.gtlitecore.api.annotation.MaterialIDRange;
 
@@ -304,6 +305,21 @@ public class GTLiteModCompatibilityMaterials {
                 .build()
                 .setFormula("(Ni(AuAgCu3)Fe3)C60CNT?", true);
 
+        UnstableCat = new Material.Builder(getID(), gregtechId("unstable_cat"))
+                .fluid()
+                .color(0x966e4c)
+                .iconSet(FLUID)
+                .build()
+                .setFormula("(^ω^)☆");
+
+        Cat = new Material.Builder(getID(), gregtechId("stable_cat"))
+                .fluid()
+                .dust()
+                .flags(NO_SMELTING)
+                .color(0x9c6537)
+                .iconSet(DULL)
+                .build()
+                .setFormula("(^ω^)", false);
     }
 
 }

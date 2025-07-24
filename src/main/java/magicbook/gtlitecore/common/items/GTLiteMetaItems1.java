@@ -1817,6 +1817,14 @@ public class GTLiteMetaItems1 extends StandardMetaItem {
                 .addOreDict("circuitFluixMaster")
                 .setCreativeTabs(GTLiteAPI.TAB_GTLITE_AE2_INTEGRATION);
 
+
+        /* ------------------------------------------------------------------------ fork -------------------*/ // why so long
+
+        NEPATA_CATARIA = this.addItem(4100, "nepata_cataria");
+        UNKNOWN_CAT = this.addItem(4101, "unknown_cat");
+        STRESS_CAT = this.addItem(4102, "stress_cat");
+        GOOD_CAT = this.addItem(4103, "good_cat");
+
         /* ------------------------------------------------------------------------ Foods ------------------------------------------------------------------------- */
         BEDROCK_CHOCOLATE = this.addItem(5000, "food.bedrock_chocolate")
                 .addComponents(new GTFOFoodStats(5, 2.5F, false, false, ItemStack.EMPTY,

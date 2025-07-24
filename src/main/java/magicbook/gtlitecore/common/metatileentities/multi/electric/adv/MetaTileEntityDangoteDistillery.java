@@ -76,10 +76,10 @@ public class MetaTileEntityDangoteDistillery extends MultiMapMultiblockControlle
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        if (!usesAdvancedHatchLogic() || this.structurePattern == null)
-            return;
-        this.layerCount = determineLayerCount(this.structurePattern);
-        this.orderedFluidOutputs = determineOrderedFluidOutputs();
+        if(this.structurePattern != null) {
+            this.layerCount = determineLayerCount(this.structurePattern);
+            this.orderedFluidOutputs = determineOrderedFluidOutputs();
+        }
     }
 
     protected boolean usesAdvancedHatchLogic() {

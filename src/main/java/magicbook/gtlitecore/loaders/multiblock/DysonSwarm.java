@@ -21,8 +21,6 @@ import static magicbook.gtlitecore.common.items.GTLiteMetaItems.ETERNAL_DYSON_SW
 
 public class DysonSwarm {
 
-    private static final Log log = LogFactory.getLog(DysonSwarm.class);
-
     public static void init() {
 
         //  Dyson Swarm Module

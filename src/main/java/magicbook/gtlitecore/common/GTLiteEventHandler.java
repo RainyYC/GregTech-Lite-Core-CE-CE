@@ -9,6 +9,7 @@ import magicbook.gtlitecore.api.unification.materials.GTLiteMaterialPropertyAddi
 import magicbook.gtlitecore.api.unification.materials.helper.MaterialHelperManager;
 import magicbook.gtlitecore.api.unification.materials.properties.GTLiteMaterialFlagAddition;
 import magicbook.gtlitecore.common.items.GTLiteTools;
+import magicbook.gtlitecore.common.metatileentities.multi.part.MetaTileEntityWirelessEnergyHatch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -91,7 +92,7 @@ public class GTLiteEventHandler {
 
         @SubscribeEvent
         public void onTicking(TickEvent.PlayerTickEvent event) {
-            if (!GTLiteConfigHolder.misc.notifyWirelessEnergy) return;
+            if (!GTLiteConfigHolder.misc.notifyWirelessEnergy || event.player.world.isRemote) return;
             if (event.phase == TickEvent.Phase.END) {
                 int tick = ticks.getOrDefault(event.player.getUniqueID(), 0) + 1;
                 if(tick >= TICK_INTERVAL) {
@@ -103,7 +104,7 @@ public class GTLiteEventHandler {
         }
 
         private void showWirelessEnergy(EntityPlayer player) {
-            BigInteger eu = WirelessEnergyNetworkManager.getUserEU(player.getUniqueID());
+            BigInteger eu = WirelessEnergyNetworkManager.getUserEU(MetaTileEntityWirelessEnergyHatch.UNIVERSAL_UUID);
             if(eu.compareTo(BigInteger.ZERO) <= 0) return;
 
             ITextComponent line1 = new TextComponentTranslation(

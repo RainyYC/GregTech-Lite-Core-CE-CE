@@ -54,6 +54,7 @@ public class MetaTileEntityWirelessEnergyHatch extends MetaTileEntityMultiblockP
     private final WirelessEnergyContainerHandler energyContainer;
     private UUID uuid = null;
     private final String NBT_TAG = "WirelessEnergyNetworkUUID";
+    public static final UUID UNIVERSAL_UUID = new UUID(0, 0);
 
     public MetaTileEntityWirelessEnergyHatch(ResourceLocation metaTileEntityId,
                                              int tier,
@@ -67,6 +68,7 @@ public class MetaTileEntityWirelessEnergyHatch extends MetaTileEntityMultiblockP
         } else {
             this.energyContainer = WirelessEnergyContainerHandler.receiverContainer(this, GTValues.V[tier] * 16L * (long) amperage, GTValues.V[tier], amperage);
         }
+        setUUID(UNIVERSAL_UUID);
     }
 
     @Override
@@ -126,7 +128,7 @@ public class MetaTileEntityWirelessEnergyHatch extends MetaTileEntityMultiblockP
                                             EnumFacing facing,
                                             CuboidRayTraceResult hitResult) {
         if (player.isSneaking()) {
-            setUUID(player.getUniqueID());
+            // setUUID(player.getUniqueID());
             if (player.getEntityWorld().isRemote) {
                 player.sendMessage( new TextComponentTranslation("gtlitecore.machine.wireless_energy_hatch.connect"));
             }

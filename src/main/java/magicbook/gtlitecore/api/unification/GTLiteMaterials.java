@@ -979,6 +979,10 @@ public class GTLiteMaterials {
     public static Material MysteriousCrystal;
     public static Material BlackIron;
 
+    //  fork materials
+    public static Material UnstableCat;
+    public static Material Cat;
+
     //  Nuclear Materials
 
     public static void init() {

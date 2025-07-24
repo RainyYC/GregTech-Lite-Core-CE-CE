@@ -13,6 +13,7 @@ import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.recipes.Recipe;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.common.blocks.MetaBlocks;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
 import magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps;
 import magicbook.gtlitecore.api.recipe.properties.AltitudeProperty;
 import magicbook.gtlitecore.api.unification.GTLiteMaterials;
@@ -166,7 +167,7 @@ public class MetaTileEntityCosmicRayDetector extends RecipeMapMultiblockControll
         this.topBlockPos = new BlockPos(pos[0], pos[1], pos[2]);
     }
 
-    protected class CosmicRayDetectorRecipeLogic extends MultiblockRecipeLogic {
+    protected class CosmicRayDetectorRecipeLogic extends AdvancedRecipeLogic {
         public CosmicRayDetectorRecipeLogic(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
         }

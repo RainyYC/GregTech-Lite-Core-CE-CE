@@ -299,7 +299,7 @@ public class MetaTileEntityMegaOilCrackingUnit extends RecipeMapMultiblockContro
             if (coilTier <= 0)
                 return;
 
-            resultOverclock[0] *= (int) (1.0f - coilTier * 0.1);
+            resultOverclock[0] = (int) (resultOverclock[0] * (1.0f - coilTier * 0.1));
             resultOverclock[0] = Math.max(1, resultOverclock[0]);
         }
     }
