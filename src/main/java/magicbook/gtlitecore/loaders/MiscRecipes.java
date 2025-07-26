@@ -11,6 +11,7 @@ import gregtech.common.items.MetaItems;
 import magicbook.gtlitecore.common.GTLiteConfigHolder;
 import magicbook.gtlitecore.common.blocks.BlockTransparentCasing;
 import magicbook.gtlitecore.common.blocks.GTLiteMetaBlocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -320,7 +321,7 @@ public class MiscRecipes {
         MIXER_RECIPES.recipeBuilder()
                 .input(dust, Alumina)
                 .input(dust, Iodine)
-                .input("blockSand", 3)
+                .inputs(new ItemStack(Blocks.SAND, 3))
                 .fluidInputs(Water.getFluid(1000))
                 .fluidOutputs(FracuringFluid.getFluid(1000))
                 .duration(100)
