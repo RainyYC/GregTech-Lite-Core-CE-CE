@@ -447,7 +447,7 @@ public class LargeChemicalComplex {
         LARGE_CHEMICAL_COMPLEX_RECIPES.recipeBuilder()
                 .notConsumable(CATALYST_PLASTIC_POLYMER)
                 .input(dust, Phosphorus, 1)
-                .input(dust, Nitrogen, 1)
+                .fluidInputs(Nitrogen.getFluid(1000))
                 .fluidInputs(Fluorine.getFluid(2000))
                 .fluidOutputs(PolyPhosphonitrileFluoroRubber.getFluid(4000)) // (1+1+2)*1000
                 .EUt(VA[ZPM])
