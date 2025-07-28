@@ -14,6 +14,7 @@ import gregtech.common.blocks.*;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.loaders.recipe.CraftingComponent;
 import gregtech.loaders.recipe.MetaTileEntityLoader;
+import magicbook.gtlitecore.api.utils.GTLiteLog;
 import magicbook.gtlitecore.common.GTLiteConfigHolder;
 import magicbook.gtlitecore.common.blocks.BlockBoilerCasing;
 import magicbook.gtlitecore.common.blocks.BlockCleanroomCasing;
@@ -27,6 +28,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 import static gregicality.multiblocks.api.unification.GCYMMaterials.*;
@@ -138,13 +140,12 @@ public class MachineRecipeLoader {
 
         //  Condenser
         MetaTileEntityLoader.registerMachineRecipe(true, CONDENSER,
-                "RFR", "PHP", "WXW",
+                "XFX", "PHP", "WXW",
                 'H', CraftingComponent.HULL,
                 'P', CraftingComponent.PISTON,
                 'F', CraftingComponent.FIELD_GENERATOR,
                 'W', CraftingComponent.CABLE,
-                'X', CraftingComponent.BETTER_CIRCUIT,
-                'R', CraftingComponent.STICK_RADIOACTIVE);
+                'X', CraftingComponent.BETTER_CIRCUIT);
 
         //  Bio Reactor
         MetaTileEntityLoader.registerMachineRecipe(true, BIO_REACTOR,

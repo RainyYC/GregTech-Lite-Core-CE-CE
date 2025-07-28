@@ -55,6 +55,7 @@ public class GTLiteMaterialFlagAddition {
         Bohrium.addFlags(GENERATE_PLATE);
         Actinium.addFlags(GENERATE_PLATE);
         Vanadium.addFlags(GENERATE_PLATE);
+        Indium.addFlags(GENERATE_PLATE);
 
         //  Double Plate
         HastelloyX.addFlags(GENERATE_DOUBLE_PLATE);
@@ -98,6 +99,7 @@ public class GTLiteMaterialFlagAddition {
         Molybdenum.addFlags(GENERATE_DENSE);
         VanadiumGallium.addFlags(GENERATE_DENSE);
         RutheniumTriniumAmericiumNeutronate.addFlags(GENERATE_DENSE);
+        Ichorium.addFlags(GENERATE_DENSE);
 
         //  Foil
         Nickel.addFlags(GENERATE_FOIL);
