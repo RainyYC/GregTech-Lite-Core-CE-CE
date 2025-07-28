@@ -53,7 +53,7 @@ public class GTLiteCore {
     /* ------------------ Internal Only Parameters ------------------ */
     public static final String MODID = "gtlitecore";
     public static final String NAME = "Gregicality Science";
-    public static final String VERSION = "0.0.1-alpha";
+    public static final String VERSION = "0.7.7-alpha";
     /* -------------------------------------------------------------- */
 
     //  Hint: If you want used Mod ID of {@code gtlitecore},
