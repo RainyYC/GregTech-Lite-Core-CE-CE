@@ -15,6 +15,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.SneakyThrows;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -36,22 +37,24 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     // for MAX+ OC
 
     // not getter no setter
-    public class OCParameter {
-        public double durationMultiplier, eutMultiplier;
+    public static class OCParameter {
+        public double durationMultiplier, eutMultiplier, inputMultiplier;
         public int count;
 
-        public OCParameter(double durationMultiplier, double eutMultiplier, int count) {
+        // 单次超频的：时间因子 功率乘数 虚拟功率乘数 允许超频次数
+        public OCParameter(double durationMultiplier, double eutMultiplier, double inputMultiplier, int count) {
             this.durationMultiplier = durationMultiplier;
             this.eutMultiplier = eutMultiplier;
+            this.inputMultiplier = inputMultiplier;
             this.count = count;
         }
 
         public OCParameter copy() {
-            return new OCParameter(durationMultiplier, eutMultiplier, count);
+            return new OCParameter(durationMultiplier, eutMultiplier, inputMultiplier, count);
         }
     }
 
-    public class OCResult {
+    public static class OCResult {
         public long eut, duration;
         public int parallel;
 
@@ -146,13 +149,15 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
         long maxEU = getInputEUt();
         List<OCParameter> ocParameters = getOCList();
         double parallel = 1;
+        double usedEut = eut;
         boolean is1tick = duration <= 1.0D;
         for(OCParameter parameter : ocParameters) {
             parameter = parameter.copy();
             while(parameter.count --> 0) {
-                if(eut * parameter.eutMultiplier > maxEU)
+                if(usedEut * parameter.eutMultiplier > maxEU)
                     return new OCResult((long) eut, Math.round(duration), (int) Math.round(parallel));
                 eut *= parameter.eutMultiplier;
+                usedEut *= parameter.inputMultiplier;
                 if(is1tick)
                     parallel = Math.min(get1tocLimit(), parallel * parameter.durationMultiplier);
                 else {
@@ -170,6 +175,14 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     @Override
     protected void setupRecipe(Recipe recipe) {
         LSetupRecipe(recipe, overclockResults[0], overclockResults[1]);
+    }
+
+    // you should never use this
+    @SneakyThrows
+    @Deprecated
+    @Override
+    protected final boolean drawEnergy(int recipeEUt, boolean simulate) {
+        throw new IllegalAccessException("Use drawEnergy(long, boolean) instead");
     }
 
     protected boolean drawEnergy(long recipeEUt, boolean simulate) {
@@ -202,7 +215,12 @@ public class AdvancedRecipeLogic extends MultiblockRecipeLogic {
     }
 
     public List<OCParameter> getOCList() {
-        return Arrays.asList(new OCParameter(getOverclockingDurationDivisor(), getOverclockingVoltageMultiplier(), Integer.MAX_VALUE));
+        return Arrays.asList(new OCParameter(
+                getOverclockingDurationDivisor(),
+                getOverclockingVoltageMultiplier(),
+                getOverclockingVoltageMultiplier(),
+                Integer.MAX_VALUE
+        ));
     }
 
     // for Recipe Async
