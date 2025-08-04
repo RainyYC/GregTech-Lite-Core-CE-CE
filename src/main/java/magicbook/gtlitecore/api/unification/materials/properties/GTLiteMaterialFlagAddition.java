@@ -243,6 +243,8 @@ public class GTLiteMaterialFlagAddition {
         Molybdenum.addFlags(GENERATE_FINE_WIRE);
         Vanadium.addFlags(GENERATE_FINE_WIRE);
         CertusQuartz.addFlags(GENERATE_FINE_WIRE);
+        Indium.addFlags(GENERATE_FINE_WIRE);
+        Duranium.addFlags(GENERATE_FINE_WIRE);
 
         //  Crystallization
         Monazite.addFlags(DISABLE_CRYSTALLIZATION);
