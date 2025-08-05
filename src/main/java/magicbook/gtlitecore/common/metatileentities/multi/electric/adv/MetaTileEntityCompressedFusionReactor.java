@@ -29,6 +29,8 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockGlassCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityLaserHatch;
+import magicbook.gtlitecore.api.capability.impl.AdvancedRecipeLogic;
+import magicbook.gtlitecore.api.capability.impl.FusionEnergyContainerList;
 import magicbook.gtlitecore.api.gui.GTLiteGuiTextures;
 import magicbook.gtlitecore.client.renderer.texture.GTLiteTextures;
 import net.minecraft.block.state.IBlockState;
@@ -46,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -82,11 +85,12 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
     public final IBlockState frameState;
 
     //  Internal Energy Container, just like common Fusion Reactors.
-    private EnergyContainerList inputEnergyContainers;
+    private FusionEnergyContainerList inputEnergyContainers;
 
     //  Heat, like common Fusion Reactors.
     //  TODO Delete Heat system of CFR?
     private long heat = 0;
+    private int fusionMaxOverclockCount = 0;
 
     //  Used for Special Progress Bar in Modular UI.
     //  TODO Add new Modular UI form of CFR (different with Fusion Reactor)?
@@ -287,7 +291,9 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
 
         List<IEnergyContainer> energyInputs = new ArrayList<>(this.getAbilities(MultiblockAbility.INPUT_ENERGY));
         energyInputs.addAll(this.getAbilities(MultiblockAbility.INPUT_LASER));
-        this.inputEnergyContainers = new EnergyContainerList(energyInputs);
+        
+        final long[] limitPerHatch = { 131072L, 524288L, 1572864L, 33554432L, 268435456L };
+        this.inputEnergyContainers = new FusionEnergyContainerList(energyInputs, limitPerHatch[tier - 6]);
 
         //  EU Capacity = Energy Hatch amount * Energy Stored (half of original Fusion Reactor).
         long euCapacity = calculateEnergyStorageFactor(energyInputs.size());
@@ -518,6 +524,10 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
         return heat;
     }
 
+    public long getCurrentOverclockLimit() {
+        return fusionMaxOverclockCount;
+    }
+
     private static class FusionProgressSupplier {
 
         private final AtomicDouble tracker = new AtomicDouble(0.0);
@@ -638,8 +648,8 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
         }
     }
 
-    private class CompressedFusionReactorRecipeLogic extends MultiblockRecipeLogic {
-
+    private class CompressedFusionReactorRecipeLogic extends AdvancedRecipeLogic {
+        
         public CompressedFusionReactorRecipeLogic(MetaTileEntityCompressedFusionReactor tileEntity) {
             super(tileEntity);
         }
@@ -686,10 +696,28 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
                 return 2.0D;
             }
         }
+        
+        @Override
+        public void updateWorkable() {
+            super.updateWorkable();
+            // Drain heat when the reactor is not active, is paused via soft mallet, or does not have enough energy and has fully wiped recipe progress
+            // Don't drain heat when there is not enough energy and there is still some recipe progress, as that makes it doubly hard to complete the recipe
+            // (Will have to recover heat and recipe progress)
+            if (heat > 0) {
+                if (!isActive || !workingEnabled || (hasNotEnoughEnergy && progressTime == 0)) {
+                    heat = heat <= 10000 ? 0 : (heat - 10000);
+                }
+            }
+        }
 
         @Override
-        public long getMaximumOverclockVoltage() {
-            return inputEnergyContainers.getInputVoltage();
+        public List<OCParameter> getOCList() {
+            return Arrays.asList(new OCParameter(
+                    getOverclockingDurationDivisor(),
+                    getOverclockingVoltageMultiplier(),
+                    4.0D,
+                    fusionMaxOverclockCount
+            ));
         }
 
         @Override
@@ -706,24 +734,19 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
          */
         @Override
         public long getMaxParallelVoltage() {
-            IEnergyContainer container = ((MetaTileEntityCompressedFusionReactor) this.metaTileEntity).inputEnergyContainers;
-            return Math.min(GTValues.V[tier] * getParallelLimit(), container.getInputVoltage());
+            return inputEnergyContainers.getInputVoltage();
         }
-
 
         @Override
-        public void updateWorkable() {
-            super.updateWorkable();
-            // Drain heat when the reactor is not active, is paused via soft mallet, or does not have enough energy and has fully wiped recipe progress
-            // Don't drain heat when there is not enough energy and there is still some recipe progress, as that makes it doubly hard to complete the recipe
-            // (Will have to recover heat and recipe progress)
-            if (heat > 0) {
-                if (!isActive || !workingEnabled || (hasNotEnoughEnergy && progressTime == 0)) {
-                    heat = heat <= 10000 ? 0 : (heat - 10000);
-                }
-            }
+        public long getMaximumOverclockVoltage() {
+            return inputEnergyContainers.getInputVoltage();
         }
 
+        @Override
+        public long getInputEUt() {
+            return inputEnergyContainers.getInputVoltage();
+        }
+        
         @Override
         public boolean checkRecipe(@NotNull Recipe recipe) {
             if (!super.checkRecipe(recipe))
@@ -748,46 +771,61 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
                 case LuV -> {
                     if (startCost <= 160000000L) {
                         this.setParallelLimit(parallelBase);
+                        fusionMaxOverclockCount = 0;
                     }
                 }
                 case ZPM -> {
                     if (startCost <= 160000000L) {
                         this.setParallelLimit(parallelBase * 2);
+                        fusionMaxOverclockCount = 1;
                     } else if (startCost <= 320000000L) {
                         this.setParallelLimit(parallelBase);
+                        fusionMaxOverclockCount = 0;
                     }
                 }
                 case UV -> {
                     if (startCost <= 160000000L) {
                         this.setParallelLimit(parallelBase * 3);
+                        fusionMaxOverclockCount = 2;
                     } else if (startCost <= 320000000L) {
                         this.setParallelLimit(parallelBase * 2);
+                        fusionMaxOverclockCount = 1;
                     } else if (startCost <= 640000000L) {
                         this.setParallelLimit(parallelBase);
+                        fusionMaxOverclockCount = 0;
                     }
                 }
                 case UHV -> {
                     if (startCost <= 160000000L) {
                         this.setParallelLimit(parallelBase * 4);
+                        fusionMaxOverclockCount = 3;
                     } else if (startCost <= 320000000L) {
                         this.setParallelLimit(parallelBase * 3);
+                        fusionMaxOverclockCount = 2;
                     } else if (startCost <= 640000000L) {
                         this.setParallelLimit(parallelBase * 2);
+                        fusionMaxOverclockCount = 1;
                     } else if (startCost <= 1280000000L) {
                         this.setParallelLimit(parallelBase);
+                        fusionMaxOverclockCount = 0;
                     }
                 }
                 case UEV -> {
                     if (startCost <= 160000000L) {
                         this.setParallelLimit(parallelBase * 5);
+                        fusionMaxOverclockCount = 4;
                     } else if (startCost <= 320000000L) {
                         this.setParallelLimit(parallelBase * 4);
+                        fusionMaxOverclockCount = 3;
                     } else if (startCost <= 640000000L) {
                         this.setParallelLimit(parallelBase * 3);
+                        fusionMaxOverclockCount = 2;
                     } else if (startCost <= 1280000000L) {
                         this.setParallelLimit(parallelBase * 2);
+                        fusionMaxOverclockCount = 1;
                     } else if (startCost <= 2560000000L) {
                         this.setParallelLimit(parallelBase * 2);
+                        fusionMaxOverclockCount = 0;
                     }
                 }
             }
@@ -823,5 +861,6 @@ public class MetaTileEntityCompressedFusionReactor extends RecipeMapMultiblockCo
             super.deserializeNBT(compound);
             heat = compound.getLong("Heat");
         }
+
     }
 }

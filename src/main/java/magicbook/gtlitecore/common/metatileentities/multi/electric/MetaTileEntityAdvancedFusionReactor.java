@@ -21,6 +21,7 @@ import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.recipeproperties.FusionEUToStartProperty;
+import gregtech.api.recipes.recipeproperties.IRecipePropertyStorage;
 import gregtech.api.util.TextComponentUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
@@ -502,6 +503,20 @@ public class MetaTileEntityAdvancedFusionReactor extends RecipeMapMultiblockCont
         @Override
         public long getMaxVoltage() {
             return Math.min(GTValues.V[tier], super.getMaxVoltage());
+        }
+
+        // Derived from GTCEu repo. 
+        @Override
+        protected void modifyOverclockPre(int @NotNull [] values, @NotNull IRecipePropertyStorage storage) {
+            super.modifyOverclockPre(values, storage);
+
+            // Limit the number of OCs to the difference in fusion reactor MK.
+            // I.e., a MK4 reactor can overclock a MK3 recipe once, and a
+            // MK5 reactor can overclock a MK4 recipe once, or a MK3 recipe twice.
+            long euToStart = storage.getRecipePropertyValue(FusionEUToStartProperty.getInstance(), 0L);
+            int fusionTier = FusionEUToStartProperty.getFusionTier(euToStart);
+            if (fusionTier != 0) fusionTier = tier - fusionTier;
+            values[2] = Math.min(fusionTier, values[2]);
         }
 
         @Override
