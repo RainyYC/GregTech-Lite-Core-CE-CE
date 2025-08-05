@@ -247,7 +247,7 @@ tasks.register('compileAndZip', Zip) {
     dependsOn("reobfJar")
     from 'build/libs'
     from '/'
-    include 'gtlitecore-0.7.7-alpha.jar'
+    include 'gtlitecore-0.7.8-dev.jar'
     include '更新一览.md'
 
     destinationDirectory = file("build")
