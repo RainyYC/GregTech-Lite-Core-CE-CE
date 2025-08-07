@@ -25,7 +25,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import scala.Int;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +87,8 @@ public class GTLiteEventHandler {
 
     public static class TickingHandler {
         private static final BigInteger MAX_T = BigInteger.valueOf(2147483647L);
+        private static final BigInteger MAX_10_HOUR = MAX_T.multiply(BigInteger.valueOf(10 * 60 * 60 * 20));
+
         private static final Map<UUID, BigInteger> lastEU = new HashMap<>();
         private static final Map<UUID, Integer> ticks = new HashMap<>();
         private static final int TICK_INTERVAL = 5 * GTLiteValues.MINUTE;
@@ -107,31 +111,56 @@ public class GTLiteEventHandler {
             BigInteger eu = WirelessEnergyNetworkManager.getUserEU(MetaTileEntityWirelessEnergyHatch.UNIVERSAL_UUID);
             if(eu.compareTo(BigInteger.ZERO) <= 0) return;
 
-            ITextComponent line1 = new TextComponentTranslation(
-                    "gtlitecore.wirelessenergy.notify.part.1",
-                    makeGrouping(eu.toString())
-            );
-            ITextComponent part2 = new TextComponentTranslation(
-                    "gtlitecore.wirelessenergy.notify.part.2",
-                    makeGrouping(eu.divide(MAX_T).toString())
-            );
-            if (eu.compareTo(MAX_T.multiply(BigInteger.TEN)) > 0) line1 = line1.appendSibling(part2);
-            player.sendMessage(line1);
+            player.sendMessage(formatEnergyContained(eu));
 
-            if(lastEU.containsKey(player.getUniqueID())) {
+            if (lastEU.containsKey(player.getUniqueID())) {
                 BigInteger delta = eu.subtract(lastEU.get(player.getUniqueID())).divide(BIG_INTEGER_TICK_INTERVAL);
-                ITextComponent line2 = new TextComponentTranslation(
-                        "gtlitecore.wirelessenergy.notify.part.3",
-                        makeGrouping(delta.toString(), "+")
-                );
-                ITextComponent part4 = new TextComponentTranslation(
-                        "gtlitecore.wirelessenergy.notify.part.4",
-                        makeGrouping(delta.divide(MAX_T).toString(), "+")
-                );
-                if(delta.compareTo(MAX_T) > 0) line2 = line2.appendSibling(part4);
-                player.sendMessage(line2);
+                player.sendMessage(formatEnergyDelta(delta));
+
+                if (delta.compareTo(BigInteger.ZERO) < 0) {
+                    BigInteger remainTicks = eu.divide(delta.negate());
+                    if (remainTicks.compareTo(BigInteger.valueOf(1000 * 60 * 60 * 20).multiply(MAX_T)) < 0) {
+                        player.sendMessage(new TextComponentTranslation(
+                                "gtlitecore.wirelessenergy.notify.part.5",
+                                String.format("%.2f", remainTicks.doubleValue() / 1200)
+                        ));
+                    }
+                }
             }
             lastEU.put(player.getUniqueID(), eu);
+        }
+
+        private static ITextComponent formatEnergyContained(BigInteger eu) {
+            if (eu.compareTo(MAX_10_HOUR) >= 0) {
+                String v = eu.multiply(BigInteger.valueOf(100)).divide(MAX_10_HOUR).toString();
+                return new TextComponentTranslation(
+                        "gtlitecore.wirelessenergy.notify.part.2",
+                        makeGrouping(v.substring(0, v.length() - 2)) + "." + v.substring(v.length() - 2)
+                );
+            } else {
+                String v = eu.toString();
+                return new TextComponentTranslation(
+                        "gtlitecore.wirelessenergy.notify.part.1",
+                        makeGrouping(v)
+                );
+            }
+        }
+
+        private static ITextComponent formatEnergyDelta(BigInteger eu) {
+            BigInteger absEu = eu.compareTo(BigInteger.ZERO) >= 0 ? eu : eu.negate();
+            if (absEu.compareTo(MAX_T) >= 0) {
+                String v = eu.multiply(BigInteger.valueOf(100)).divide(MAX_T).toString();
+                return new TextComponentTranslation(
+                        "gtlitecore.wirelessenergy.notify.part.4",
+                        makeGrouping(v.substring(0, v.length() - 2), "+") + "." + v.substring(v.length() - 2)
+                );
+            } else {
+                String v = eu.toString();
+                return new TextComponentTranslation(
+                        "gtlitecore.wirelessenergy.notify.part.3",
+                        makeGrouping(v, "+")
+                );
+            }
         }
     }
 

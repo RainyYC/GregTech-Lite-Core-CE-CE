@@ -16,8 +16,7 @@ import static gregtech.common.items.MetaItems.POWER_THRUSTER_ADVANCED;
 import static magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps.DYSON_SWARM_RECIPES;
 import static magicbook.gtlitecore.api.unification.GTLiteMaterials.*;
 import static magicbook.gtlitecore.api.unification.materials.info.GTLiteOrePrefix.swarm;
-import static magicbook.gtlitecore.common.items.GTLiteMetaItems.DYSON_SWARM_MODULE;
-import static magicbook.gtlitecore.common.items.GTLiteMetaItems.ETERNAL_DYSON_SWARM_MODULE;
+import static magicbook.gtlitecore.common.items.GTLiteMetaItems.*;
 
 public class DysonSwarm {
 
@@ -43,10 +42,10 @@ public class DysonSwarm {
         ASSEMBLER_RECIPES.recipeBuilder()
                 .input(plate, Periodicium, 16)
                 .input(circuit, MarkerMaterials.Tier.OpV, 4)
-                .input(swarm, Eternity, 32)
+                .input(DIMENSION_GAP, 2)
                 .input(DYSON_SWARM_MODULE, 16)
                 .output(ETERNAL_DYSON_SWARM_MODULE)
-                .EUt(VA[UXV])
+                .EUt(VA[OpV])
                 .duration(42 * 20)
                 .buildAndRegister();
 

@@ -118,7 +118,7 @@ public class MetaTileEntityDysonSwarm extends FuelMultiblockController {
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.10"));
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.11"));
         tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.tooltip.12"));
-        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.uses_per_hour_coolant", 3600000));
+        tooltip.add(I18n.format("gtlitecore.machine.dyson_swarm.uses_per_hour_coolant", 1000));
         tooltip.add(I18n.format("gtlitecore.universal.tooltip.laser_output"));
     }
 
@@ -267,7 +267,7 @@ public class MetaTileEntityDysonSwarm extends FuelMultiblockController {
 
         private boolean isCoolant = false;
         private final MetaTileEntityDysonSwarm dysonSwarm;
-        private static final FluidStack GELID_CRYOTHEUM_STACK = GTLiteMaterials.GelidCryotheum.getFluid(3600000);
+        private static final FluidStack GELID_CRYOTHEUM_STACK = GTLiteMaterials.GelidCryotheum.getFluid(1000);
 
         public DysonSwarmWorkableHandler(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
