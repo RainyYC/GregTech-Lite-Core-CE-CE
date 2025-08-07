@@ -10,24 +10,16 @@ import magicbook.gtlitecore.api.unification.materials.helper.MaterialHelperManag
 import magicbook.gtlitecore.api.unification.materials.properties.GTLiteMaterialFlagAddition;
 import magicbook.gtlitecore.common.items.GTLiteTools;
 import magicbook.gtlitecore.common.metatileentities.multi.part.MetaTileEntityWirelessEnergyHatch;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import scala.Int;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

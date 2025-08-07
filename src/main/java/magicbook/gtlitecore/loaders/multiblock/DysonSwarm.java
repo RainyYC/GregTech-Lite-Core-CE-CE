@@ -2,8 +2,6 @@ package magicbook.gtlitecore.loaders.multiblock;
 
 import gregtech.api.metatileentity.multiblock.CleanroomType;
 import gregtech.api.unification.material.MarkerMaterials;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import static gregtech.api.GTValues.*;
 import static gregtech.api.recipes.RecipeMaps.ASSEMBLER_RECIPES;
@@ -15,7 +13,6 @@ import static gregtech.common.items.MetaItems.CARBON_MESH;
 import static gregtech.common.items.MetaItems.POWER_THRUSTER_ADVANCED;
 import static magicbook.gtlitecore.api.recipe.GTLiteRecipeMaps.DYSON_SWARM_RECIPES;
 import static magicbook.gtlitecore.api.unification.GTLiteMaterials.*;
-import static magicbook.gtlitecore.api.unification.materials.info.GTLiteOrePrefix.swarm;
 import static magicbook.gtlitecore.common.items.GTLiteMetaItems.*;
 
 public class DysonSwarm {
