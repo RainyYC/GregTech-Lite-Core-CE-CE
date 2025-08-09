@@ -553,7 +553,8 @@ public class GTLiteMetaTileEntities {
             registerSimpleMetaTileEntity(REPLICATOR, TE_REGISTRY_ID + 152, "replicator", RecipeMaps.REPLICATOR_RECIPES, Textures.REPLICATOR_OVERLAY, true, GTLiteUtility::gtliteId, GTUtility.hvCappedTankSizeFunction);
         }
         //  UV-OpV Condenser
-        registerSimpleMetaTileEntity(CONDENSER, TE_REGISTRY_ID + 168, "condenser", GTLiteRecipeMaps.CONDENSER_RECIPES, GTLiteTextures.CONDENSER_OVERLAY, true, GTLiteUtility::gtliteId, GTUtility.genericGeneratorTankSizeFunction);
+        registerSimpleMetaTileEntity(CONDENSER, TE_REGISTRY_ID + 168, "condenser", GTLiteRecipeMaps.CONDENSER_RECIPES, GTLiteTextures.CONDENSER_OVERLAY, true, GTLiteUtility::gtliteId,
+                v -> 1000000);
 
     }
 
